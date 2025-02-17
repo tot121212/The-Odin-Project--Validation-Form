@@ -63,22 +63,20 @@ const validateCountry = () => {
 const validatePostalCode = ()=>{
     const countryElement = document.querySelector("#country");
     const country = countryElement.value;
-    if (validateCountry()){
-        const postalCodeElement = document.querySelector("#postal-code");
-        const postalCode = postalCodeElement.value;
+    const postalCodeElement = document.querySelector("#postal-code");
+    const postalCode = postalCodeElement.value;
 
-        const constraint = new RegExp(postalCodeConstraints[country][0], "");
-        console.log("Constraint used:",constraint);
+    const constraint = new RegExp(postalCodeConstraints[country][0], "");
+    console.log("Constraint used:",constraint);
 
-        // if postalcode matches the countries regex
-        if (constraint.test(postalCode)) {
-            postalCodeElement.setCustomValidity("");
-            console.log("Postal code is valid: ",postalCode);
-        } else {
-            postalCodeElement.setCustomValidity(postalCodeConstraints[country][1]);
-        }
-        postalCodeElement.reportValidity();
+    // if postalcode matches the countries regex
+    if (constraint.test(postalCode)) {
+        postalCodeElement.setCustomValidity("");
+        console.log("Postal code is valid: ",postalCode);
+    } else {
+        postalCodeElement.setCustomValidity(postalCodeConstraints[country][1]);
     }
+    postalCodeElement.reportValidity();
 }
 
 const passwordConstraints = {
