@@ -9,3 +9,11 @@ form{
     flex-direction: column;
     gap: 8px;
 }
+
+form > *:valid{
+    background-color: aliceblue;
+}
+
+form > *:invalid{
+    background-color: red;
+}

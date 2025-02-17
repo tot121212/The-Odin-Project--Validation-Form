@@ -1,20 +1,28 @@
 import "./css-reset.css";
 import "./template.css";
 
+const emailConstraints = {
+    "^[a-zA-Z0-9._%+-]+": "Email must start with letters, numbers, or special characters like '.', '_', '%', '+', or '-'.", 
+    "@": "Email must contain the '@' symbol.", 
+    "[a-zA-Z0-9.-]+": "Email domain must contain valid characters (letters, numbers, dots, hyphens).", 
+    "\\.[a-zA-Z]{2,}$": "Email must end with a valid top-level domain (e.g., '.com', '.org')."
+};
+
 const validateEmail = ()=>{
     const emailElement = document.querySelector("#email");
     const email = emailElement.value;
-    const constraint = new RegExp(
-        "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$",
-        ""
-    );
-    if (constraint.test(email)) {
-        emailElement.setCustomValidity("");
-        console.log("Email is valid: ", email);
-    } else {
-        emailElement.setCustomValidity("Email is not valid");
-        emailElement.reportValidity();
+
+    for (const [key, value] of Object.entries(emailConstraints)) {
+        const constraint = new RegExp(key, "");
+        if (!constraint.test(email)) {
+            emailElement.setCustomValidity(value);
+            emailElement.reportValidity();
+            return;
+        }
     }
+    emailElement.setCustomValidity("");
+    emailElement.reportValidity();
+    console.log("Email is valid: ", email);
 }
 
 const postalCodeConstraints =  {
@@ -42,6 +50,7 @@ const validateCountry = () => {
     console.log("Country:", country);
     if (Object.keys(postalCodeConstraints).includes(country)){
         countryElement.setCustomValidity("");
+        countryElement.reportValidity();
         console.log("Country is valid: ", country);
         return true;
     } else {
@@ -67,8 +76,8 @@ const validatePostalCode = ()=>{
             console.log("Postal code is valid: ",postalCode);
         } else {
             postalCodeElement.setCustomValidity(postalCodeConstraints[country][1]);
-            postalCodeElement.reportValidity();
         }
+        postalCodeElement.reportValidity();
     }
 }
 
@@ -92,10 +101,13 @@ const validatePassword = ()=>{
         }
     }
     passwordElement.setCustomValidity("");
-    validatePasswordConfirmation();
+    passwordElement.reportValidity();
+
+    const isInput = false;
+    validatePasswordConfirmation(isInput);
 }
 
-const validatePasswordConfirmation = ()=>{
+const validatePasswordConfirmation = (isInput)=>{
     const passwordElement = document.querySelector("#password");
     const password = passwordElement.value;
     const passwordConfirmationElement = document.querySelector("#password-confirmation");
@@ -105,6 +117,11 @@ const validatePasswordConfirmation = ()=>{
         console.log("Passwords match: ", password, passwordConfirmation);
     } else {
         passwordConfirmationElement.setCustomValidity("Passwords do not match");
+    }
+    if (isInput){
+        passwordConfirmationElement.setCustomValidity("");
+    } else {
+        console.log("Reporting password confirmation validity");
         passwordConfirmationElement.reportValidity();
     }
 }
@@ -115,7 +132,8 @@ const validateForm = (e)=>{
     validateCountry();
     validatePostalCode();
     validatePassword();
-    validatePasswordConfirmation();
+    const isInput = false;
+    validatePasswordConfirmation(isInput);
 
     const form = document.querySelector("form");
     if (form.checkValidity()){
@@ -132,11 +150,19 @@ const validateForm = (e)=>{
 }
 
 window.onload = () => {
-    document.querySelector("#email").oninput = validateEmail;
+    document.querySelector("#email").onchange = validateEmail;
     document.querySelector("#country").onchange = validateCountry;
-    document.querySelector("#postal-code").oninput = validatePostalCode;
-    document.querySelector("#password").oninput = validatePassword;
-    document.querySelector("#password-confirmation").oninput = validatePasswordConfirmation;
+    document.querySelector("#postal-code").onchange = validatePostalCode;
+    document.querySelector("#password").onchange = validatePassword;
+    document.querySelector("#password-confirmation").onchange = ()=>{
+        const isInput = false;
+        validatePasswordConfirmation(isInput);
+    }
+    document.querySelector("#password-confirmation").oninput = ()=>{
+        const isInput = true;
+        validatePasswordConfirmation(isInput);
+    }
+
     document.querySelector("#submit").onclick = validateForm;
 
     document.querySelector("#email").value = "name@email.com";
