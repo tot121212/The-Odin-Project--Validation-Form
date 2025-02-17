@@ -1,1 +1,26 @@
-<main>Hello, world!</main>
+<main>
+    <div class="content">
+        <form>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="####@#####.###" required>
+
+            <label for="country">Country</label>
+            <select name="country" id="country" required>
+                <option value=""></option>
+                <option value="us">United States</option>
+                <option value="ca">Canada</option>
+                <option value="mx">Mexico</option>
+                <option value="en">England</option>
+            </select>
+
+            <label for="postal-code">Postal Code</label>
+            <input type="text" name="postalCode" id="postal-code" required placeholder="11111" maxlength="5" pattern="^\d{5}$">
+
+            <label for="password">Password</label>
+            <input type="text" name="password" id="password" minlength="3" placeholder="Password">
+            <input type="text" name="password-confirmation" id="password-confirmation" minlength="3" placeholder="Confirmation">
+
+            <button id="submit" type="submit">Submit</button>
+        </form>
+    </div>
+</main>
